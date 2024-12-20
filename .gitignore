@@ -15,6 +15,7 @@ backend/env/
 backend/venv/
 backend/.env
 backend/*.log
+backend/**/*.md
 
 # 前端相关
 frontend/node_modules/
@@ -29,6 +30,7 @@ frontend/.cache/
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
+frontend/**/*.md
 
 # 系统文件
 *.log
