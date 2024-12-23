@@ -2,16 +2,49 @@ import requests
 import time
 import ell
 import openai
+import json
+import re
 
 client = openai.OpenAI(
     api_key="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",
     base_url="https://openrouter.ai/api/v1"
 )
 
-@ell.simple(model="gpt-4o-mini", client=client)
-def hello(name: str):
+@ell.simple(model="google/gemini-flash-1.5", client=client)
+def extract_news(text: str):
     """You are a helpful assistant."""
-    return f"Say a  hello to {name}!"
+
+    return f"""
+Extract news articles from the given 36kr author page text and return them in a clean JSON format.
+
+Requirements:
+1. For each article, extract and return ONLY:
+   - title: A rewritten, formal and concise version of the original headline
+     - Remove unnecessary prefixes like "出海速递｜", "36氪出海·关注｜" etc.
+     - Keep it professional and straight to the point
+     - Avoid sensational language and punctuation
+   - link: The full article URL
+
+2. Format requirements:
+   - Return ONLY a valid JSON array containing these article objects
+   - No additional text or formatting outside the JSON
+   - Ensure proper JSON syntax with correct quotes and commas
+   - Do not include HTML, markdown or other formatting
+   - Answer in Chinese.
+
+Example format:
+[
+  {{
+    "title": "xxxx",
+    "link": "https:xxx"
+  }}
+]
+
+Parse the following text and return ONLY the JSON array:
+<text>
+{text}
+</text>
+"""
 
 class JinaReader:
     def __init__(self):
@@ -33,7 +66,11 @@ class JinaReader:
             time.sleep(10)
         return results
 
-    def menu_list(self, url: str) -> list[str]:
+    def menu_list(self, url: str) -> list[dict]:
+        """
+        从返给定 URL 中获取文本，提取第二个“搜索”到“查看更多”之间的片段，
+        然后通过 extract_news 函数获取到 JSON 字符串，最终将其解析为字典列表回。
+        """
         text = self.read(url)
 
         # 首先查找第一个“搜索”
@@ -52,11 +89,20 @@ class JinaReader:
             return []
         
         result = text[second_search_index:more_index].strip()
-        return result
+        result_str = extract_news(result)
+        clean_str = re.sub(r'```(json)?', '', result_str).strip()
+
+        try:
+            data = json.loads(clean_str)
+        except:
+            data = []
+        
+        return data
 
 
 if __name__ == "__main__":
     reader = JinaReader()
     url = "https://36kr.com/user/11918142"
     text = reader.menu_list(url)
-    print((text))
+    print(type(text[0]))
+    print(text)
