@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from ..schemas.news import News
-from ..service.news_service import NewsService
+from backend.app.schemas.news import News
+from backend.app.service.news.news_service import NewsService
 
 router = APIRouter(
     prefix="/api/news",
@@ -26,4 +26,4 @@ async def get_news(news_id: int):
     news = NewsService.get_news_by_id(news_id)
     if news is None:
         raise HTTPException(status_code=404, detail="News not found")
-    return news 
+    return news

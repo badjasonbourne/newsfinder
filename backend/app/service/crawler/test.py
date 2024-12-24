@@ -1,1 +1,0 @@
-import backend.app.service.crawler.article_crawl as article_crawl

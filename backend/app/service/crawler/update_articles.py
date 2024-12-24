@@ -64,56 +64,65 @@ xxxxxxxx
 
 reader = JinaReader()
 
-feed_list = reader.menu_list_general("https://36kr.com/search/articles/%E4%BA%91%E8%AE%A1%E7%AE%97?sort=date")
+def update_news(url: str):
+    feed_list = reader.menu_list_general(url)
 
-for feed in feed_list:
-    title = feed["title"]
-    link = feed["link"]
-    content = reader.read(link)
-    summary = summarize_article(content).replace("<summary>", "").replace("</summary>", "")
-    content = extract_content(content).replace("<content>", "").replace("</content>", "")
-    title = title_generator(content).replace("<title>", "").replace("</title>", "")
-    
-    # 将上述信息存储为一个字典
-    feed_dict = {
-        "title": title,
-        "ai_description": summary,
-        "content": content,
-        "link": link
-    }
-    
     try:
-        # 获取数据库连接
+        # 在循环外获取数据库连接
         conn = get_db()
         cur = conn.cursor()
         
-        # 执行INSERT操作
-        cur.execute("""
-            INSERT INTO news (title, content, ai_description, link)
-            VALUES (%s, %s, %s, %s)
-            RETURNING id
-        """, (
-            feed_dict["title"],
-            feed_dict["content"],
-            feed_dict["ai_description"],
-            feed_dict["link"]
-        ))
-        
-        # 获取插入的ID
-        result = cur.fetchone()
-        
-        # 提交事务
-        conn.commit()
-        
-        print(f"成功插入新闻，ID: {result['id']}")
-        
+        for feed in feed_list:
+            try:
+                # 检查链接是否已存在
+                cur.execute("SELECT id FROM news WHERE link = %s", (feed["link"],))
+                if cur.fetchone():
+                    print(f"链接已存在，跳过: {feed['link']}")
+                    continue
+                    
+                title = feed["title"]
+                link = feed["link"]
+                content = reader.read(link)
+
+                summary = summarize_article(content).replace("<summary>", "").replace("</summary>", "")
+                content = extract_content(content).replace("<content>", "").replace("</content>", "")
+                title = title_generator(content).replace("<title>", "").replace("</title>", "")
+                
+                # 执行INSERT操作
+                cur.execute("""
+                    INSERT INTO news (title, content, ai_description, link)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id
+                """, (title, content, summary, link))
+                
+                result = cur.fetchone()
+                conn.commit()
+                print(f"成功插入新闻，ID: {result['id']}")
+                
+            except Exception as e:
+                print(f"处理新闻失败: {str(e)}")
+                conn.rollback()
+                continue
+
     except Exception as e:
-        print(f"插入新闻失败: {str(e)}")
-        if conn:
-            conn.rollback()
+        print(f"数据库操作失败: {str(e)}")
     finally:
-        # 关闭游标和连接
+        # 循环结束后关闭资源
         if cur:
             cur.close()
         if conn:
             close_db(conn)
+
+def batch_update_news(url_list: list[str]):
+    for url in url_list:
+        update_news(url)
+        print(f"更新完成: {url}")
+
+
+if __name__ == "__main__":
+    url_list = [
+        "https://36kr.com/search/newsflashes/%E9%98%BF%E9%87%8C%E4%BA%91",
+        "https://36kr.com/search/newsflashes/%E8%85%BE%E8%AE%AF%E4%BA%91",
+        "https://36kr.com/search/articles/%E5%A4%A7%E6%A8%A1%E5%9E%8B",
+    ]
+    batch_update_news(url_list)

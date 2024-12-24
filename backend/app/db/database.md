@@ -12,6 +12,7 @@
 | ai_description | text | 否 | AI生成的描述 |
 | imageurl | text | 否 | 新闻图片URL |
 | link | text | 是 | 新闻链接 |
+| date | date | 是 | 新闻日期 |
 
 ### 连接信息
 

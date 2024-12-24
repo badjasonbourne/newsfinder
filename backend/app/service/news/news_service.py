@@ -1,6 +1,6 @@
 from typing import List, Optional
-from ..db.database import get_db, close_db
-from ..schemas.news import News
+from backend.app.db.database import get_db, close_db
+from backend.app.schemas.news import News
 
 class NewsService:
     @staticmethod
