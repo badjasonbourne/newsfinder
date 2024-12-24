@@ -10,7 +10,7 @@ client = openai.OpenAI(
     base_url="https://openrouter.ai/api/v1"
 )
 
-@ell.simple(model="google/gemini-flash-1.5", client=client)
+@ell.simple(model="google/gemini-pro-1.5", client=client)
 def extract_news(text: str):
     """You are a helpful assistant."""
 
@@ -18,14 +18,15 @@ def extract_news(text: str):
 Extract news articles from the given 36kr author page text and return them in a clean JSON format.
 
 Requirements:
-1. For each article, extract and return ONLY:
+1. If a article title is not related the cloud computing and AI, please ignore it. ONLY focus on the cloud computing and AI.
+2. For each related article, extract and return ONLY:
    - title: A rewritten, formal and concise version of the original headline
      - Remove unnecessary prefixes like "出海速递｜", "36氪出海·关注｜" etc.
      - Keep it professional and straight to the point
      - Avoid sensational language and punctuation
    - link: The full article URL
 
-2. Format requirements:
+3. Format requirements:
    - Return ONLY a valid JSON array containing these article objects
    - No additional text or formatting outside the JSON
    - Ensure proper JSON syntax with correct quotes and commas
@@ -66,7 +67,7 @@ class JinaReader:
             time.sleep(10)
         return results
 
-    def menu_list(self, url: str) -> list[dict]:
+    def menu_list_36kr(self, url: str) -> list[dict]:
         """
         从返给定 URL 中获取文本，提取第二个“搜索”到“查看更多”之间的片段，
         然后通过 extract_news 函数获取到 JSON 字符串，最终将其解析为字典列表回。
@@ -98,11 +99,21 @@ class JinaReader:
             data = []
         
         return data
+    
+    def menu_list_general(self, url: str) -> list[dict]:
+        text = self.read(url)
+        result_str = extract_news(text)
+        clean_str = re.sub(r'```(json)?', '', result_str).strip()
 
+        try:
+            data = json.loads(clean_str)
+        except:
+            data = []
+        
+        return data
 
 if __name__ == "__main__":
     reader = JinaReader()
-    url = "https://36kr.com/user/11918142"
-    text = reader.menu_list(url)
-    print(type(text[0]))
+    url = "https://36kr.com/search/articles/%E4%BA%91%E8%AE%A1%E7%AE%97?sort=date"
+    text = reader.menu_list_general(url)
     print(text)

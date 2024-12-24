@@ -9,8 +9,9 @@
 | id | int4 | 是 | 主键，自增 |
 | title | text | 是 | 新闻标题 |
 | content | text | 是 | 新闻内容 |
-| date | date | 否 | 新闻日期 |
+| ai_description | text | 否 | AI生成的描述 |
 | imageurl | text | 否 | 新闻图片URL |
+| link | text | 是 | 新闻链接 |
 
 ### 连接信息
 
