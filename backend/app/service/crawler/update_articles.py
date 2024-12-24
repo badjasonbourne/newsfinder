@@ -71,6 +71,7 @@ def update_news(url: str):
         # 在循环外获取数据库连接
         conn = get_db()
         cur = conn.cursor()
+        print("database connected")
         
         for feed in feed_list:
             try:
@@ -79,21 +80,25 @@ def update_news(url: str):
                 if cur.fetchone():
                     print(f"链接已存在，跳过: {feed['link']}")
                     continue
-                    
+                
+                print("链接不存在，开始处理")
                 title = feed["title"]
                 link = feed["link"]
+                date = feed["date"]
                 content = reader.read(link)
-
+                
+                print("use llm to generate necessary information")
                 summary = summarize_article(content).replace("<summary>", "").replace("</summary>", "")
                 content = extract_content(content).replace("<content>", "").replace("</content>", "")
                 title = title_generator(content).replace("<title>", "").replace("</title>", "")
                 
                 # 执行INSERT操作
+                print("准备开始插入数据库")
                 cur.execute("""
-                    INSERT INTO news (title, content, ai_description, link)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO news (title, content, ai_description, link, date)
+                    VALUES (%s, %s, %s, %s, %s)
                     RETURNING id
-                """, (title, content, summary, link))
+                """, (title, content, summary, link, date))
                 
                 result = cur.fetchone()
                 conn.commit()

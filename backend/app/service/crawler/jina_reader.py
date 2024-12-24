@@ -37,7 +37,8 @@ Example format:
 [
   {{
     "title": "xxxx",
-    "link": "https:xxx"
+    "link": "https:xxx",
+    "date": "YYYY-MM-DD"
   }}
 ]
 
