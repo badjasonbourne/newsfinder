@@ -10,9 +10,10 @@ class NewsService:
             conn = get_db()
             cur = conn.cursor()
             cur.execute("""
-                SELECT id, title, content, ai_description, imageurl, link
+                SELECT id, title, content, ai_description, imageurl, link, date
                 FROM news
-                ORDER BY id DESC
+                ORDER BY date DESC, id DESC
+                LIMIT 50
             """)
             news_list = cur.fetchall()
             return [News(**news) for news in news_list]
@@ -27,7 +28,7 @@ class NewsService:
             conn = get_db()
             cur = conn.cursor()
             cur.execute("""
-                SELECT id, title, content, ai_description, imageurl, link
+                SELECT id, title, content, ai_description, imageurl, link, date
                 FROM news
                 WHERE id = %s
             """, (news_id,))
@@ -35,4 +36,4 @@ class NewsService:
             return News(**news) if news else None
         finally:
             if conn:
-                close_db(conn) 
+                close_db(conn)

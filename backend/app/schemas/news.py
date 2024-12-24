@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date
 
 class NewsBase(BaseModel):
+    date: date
     title: str
     content: str
     ai_description: Optional[str] = None
@@ -15,4 +17,4 @@ class News(NewsBase):
     id: int
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
