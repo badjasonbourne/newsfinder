@@ -25,8 +25,17 @@ Requirements:
      - Keep it professional and straight to the point
      - Avoid sensational language and punctuation
    - link: The full article URL
+   - date: The date of the article
+   - tags: The tags of the article (Notably, only select one tag that is most relevant to the article). ONLY select tags from the following list:
+     - 云计算
+     - 大模型LLM
+     - 出海
+     - AI社交
+     - 协同办公
 
-3. Format requirements:
+3. **IMPORTANT**: If you think a article can not be tagged based on the tag list above, please ignore it.
+
+4. Format requirements:
    - Return ONLY a valid JSON array containing these article objects
    - No additional text or formatting outside the JSON
    - Ensure proper JSON syntax with correct quotes and commas
@@ -38,7 +47,8 @@ Example format:
   {{
     "title": "xxxx",
     "link": "https:xxx",
-    "date": "YYYY-MM-DD"
+    "date": "YYYY-MM-DD",
+    "tags": "xxx"
   }}
 ]
 
