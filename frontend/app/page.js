@@ -75,10 +75,9 @@ export default function Home() {
                     {item.title}
                   </a>
                 </h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{item.content}</p>
                 {item.ai_description && (
                   <p className="text-sm text-gray-500 italic">
-                    AI解读：{item.ai_description}
+                    {item.ai_description}
                   </p>
                 )}
               </div>

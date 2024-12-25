@@ -126,8 +126,6 @@ def batch_update_news(url_list: list[str]):
 
 if __name__ == "__main__":
     url_list = [
-        "https://36kr.com/search/newsflashes/%E9%98%BF%E9%87%8C%E4%BA%91",
-        "https://36kr.com/search/newsflashes/%E8%85%BE%E8%AE%AF%E4%BA%91",
         "https://36kr.com/search/articles/%E5%A4%A7%E6%A8%A1%E5%9E%8B",
     ]
     batch_update_news(url_list)

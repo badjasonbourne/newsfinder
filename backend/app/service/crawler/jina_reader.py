@@ -115,6 +115,6 @@ class JinaReader:
 
 if __name__ == "__main__":
     reader = JinaReader()
-    url = "https://36kr.com/search/articles/%E4%BA%91%E8%AE%A1%E7%AE%97?sort=date"
+    url = "https://sanhua.himrr.com/daily-news"
     text = reader.menu_list_general(url)
     print(text)
