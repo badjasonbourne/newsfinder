@@ -10,9 +10,19 @@ class NewsService:
             conn = get_db()
             cur = conn.cursor()
             cur.execute("""
-                SELECT id, title, content, ai_description, imageurl, link, date
-                FROM news
-                ORDER BY date DESC, id DESC
+                SELECT 
+                    n.id, 
+                    n.title, 
+                    n.content, 
+                    n.ai_description, 
+                    n.imageurl, 
+                    n.link, 
+                    n.date,
+                    t.name as tag
+                FROM news n
+                LEFT JOIN news_tags nt ON n.id = nt.news_id
+                LEFT JOIN tags t ON nt.tag_id = t.id
+                ORDER BY n.date DESC, n.id DESC
                 LIMIT 50
             """)
             news_list = cur.fetchall()
@@ -28,9 +38,19 @@ class NewsService:
             conn = get_db()
             cur = conn.cursor()
             cur.execute("""
-                SELECT id, title, content, ai_description, imageurl, link, date
-                FROM news
-                WHERE id = %s
+                SELECT 
+                    n.id, 
+                    n.title, 
+                    n.content, 
+                    n.ai_description, 
+                    n.imageurl, 
+                    n.link, 
+                    n.date,
+                    t.name as tag
+                FROM news n
+                LEFT JOIN news_tags nt ON n.id = nt.news_id
+                LEFT JOIN tags t ON nt.tag_id = t.id
+                WHERE n.id = %s
             """, (news_id,))
             news = cur.fetchone()
             return News(**news) if news else None

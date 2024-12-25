@@ -101,8 +101,29 @@ def update_news(url: str):
                 """, (title, content, summary, link, date))
                 
                 result = cur.fetchone()
+                news_id = result['id']
+
+                # 处理标签
+                if "tags" in feed:
+                    tag_name = feed["tags"]
+                    # 检查标签是否存在，不存在则创建
+                    cur.execute("""
+                        INSERT INTO tags (name)
+                        VALUES (%s)
+                        ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+                        RETURNING id
+                    """, (tag_name,))
+                    tag_result = cur.fetchone()
+                    tag_id = tag_result['id']
+
+                    # 创建新闻和标签的关联
+                    cur.execute("""
+                        INSERT INTO news_tags (news_id, tag_id)
+                        VALUES (%s, %s)
+                    """, (news_id, tag_id))
+
                 conn.commit()
-                print(f"成功插入新闻，ID: {result['id']}")
+                print(f"成功插入新闻和标签，新闻ID: {news_id}")
                 
             except Exception as e:
                 print(f"处理新闻失败: {str(e)}")
@@ -126,6 +147,6 @@ def batch_update_news(url_list: list[str]):
 
 if __name__ == "__main__":
     url_list = [
-        "https://36kr.com/search/articles/%E5%A4%A7%E6%A8%A1%E5%9E%8B",
+        "https://sanhua.himrr.com/daily-news",
     ]
     batch_update_news(url_list)
