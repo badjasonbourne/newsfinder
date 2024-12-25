@@ -10,7 +10,7 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # 授权用户ID
-AUTH_UID = "c40899b1-7ea9-41d6-bd4c-3371a4ce564a"
+AUTH_UID = os.getenv("AUTH_USER_ID")
 
 def get_db():
     try:

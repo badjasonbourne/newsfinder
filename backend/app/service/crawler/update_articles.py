@@ -2,11 +2,14 @@ from backend.app.service.crawler.jina_reader import JinaReader
 from backend.app.db.database import get_db, close_db
 import ell
 import openai
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 client = openai.OpenAI(
-    api_key="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",
-    base_url="https://openrouter.ai/api/v1"
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url=os.getenv("OPENROUTER_BASE_URL")
 )
 
 model = "google/gemini-flash-1.5"

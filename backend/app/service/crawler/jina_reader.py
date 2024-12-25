@@ -6,10 +6,14 @@ import json
 import re
 from datetime import datetime
 import pytz
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client = openai.OpenAI(
-    api_key="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",
-    base_url="https://openrouter.ai/api/v1"
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url=os.getenv("OPENROUTER_BASE_URL")
 )
 
 @ell.simple(model="google/gemini-2.0-flash-exp:free", client=client)
@@ -68,7 +72,7 @@ Parse the following text and return ONLY the JSON array:
 
 class JinaReader:
     def __init__(self):
-        self.jina_url = "https://r.jina.ai"
+        self.jina_url = os.getenv("JINA_API_URL")
     
     def read(self, url: str) -> str:
         jina_url = f"{self.jina_url}/{url}"
@@ -88,22 +92,22 @@ class JinaReader:
 
     def menu_list_36kr(self, url: str) -> list[dict]:
         """
-        从返给定 URL 中获取文本，提取第二个“搜索”到“查看更多”之间的片段，
+        从返给定 URL 中获取文本，提取第二个"搜索"到"查看更多"之间的片段，
         然后通过 extract_news 函数获取到 JSON 字符串，最终将其解析为字典列表回。
         """
         text = self.read(url)
 
-        # 首先查找第一个“搜索”
+        # 首先查找第一个"搜索"
         first_search_index = text.find("搜索")
         if first_search_index == -1:
             return []
         
-        # 接着查找相对于第一个“搜索”之后的第二个“搜索”
+        # 接着查找相对于第一个"搜索"之后的第二个"搜索"
         second_search_index = text.find("搜索", first_search_index + len("搜索"))
         if second_search_index == -1:
             return []
         
-        # 从第二个“搜索”位置开始查找“查看更多”
+        # 从第二个"搜索"位置开始查找"查看更多"
         more_index = text.find("查看更多", second_search_index)
         if more_index == -1:
             return []
