@@ -4,15 +4,20 @@ import ell
 import openai
 import json
 import re
+from datetime import datetime
+import pytz
 
 client = openai.OpenAI(
     api_key="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",
     base_url="https://openrouter.ai/api/v1"
 )
 
-@ell.simple(model="google/gemini-pro-1.5", client=client)
+@ell.simple(model="google/gemini-2.0-flash-exp:free", client=client)
 def extract_news(text: str):
     """You are a helpful assistant."""
+
+    tz = pytz.timezone('Asia/Shanghai')
+    beijing_time = datetime.now(tz).strftime('%Y-%m-%d')
 
     return f"""
 Extract news articles from the given 36kr author page text and return them in a clean JSON format.
@@ -25,17 +30,18 @@ Requirements:
      - Keep it professional and straight to the point
      - Avoid sensational language and punctuation
    - link: The full article URL
-   - date: The date of the article
+   - date: The date of the article.
    - tags: The tags of the article (Notably, only select one tag that is most relevant to the article). ONLY select tags from the following list:
-     - 云计算
-     - 大模型LLM
-     - 出海
-     - AI社交
-     - 协同办公
+     <tags_list>
+     1. 云计算
+     2. 大模型LLM
+     3. 出海资讯
+     4. AI社交
+     5. 协同办公
+     6. 其他
+     </tags_list>
 
-3. **IMPORTANT**: If you think a article can not be tagged based on the tag list above, please ignore it.
-
-4. Format requirements:
+3. Format requirements:
    - Return ONLY a valid JSON array containing these article objects
    - No additional text or formatting outside the JSON
    - Ensure proper JSON syntax with correct quotes and commas
@@ -51,6 +57,8 @@ Example format:
     "tags": "xxx"
   }}
 ]
+
+To be noticed, today is {beijing_time}.
 
 Parse the following text and return ONLY the JSON array:
 <text>
@@ -125,6 +133,6 @@ class JinaReader:
 
 if __name__ == "__main__":
     reader = JinaReader()
-    url = "https://sanhua.himrr.com/daily-news"
+    url = "https://letschuhai.com/recent"
     text = reader.menu_list_general(url)
     print(text)

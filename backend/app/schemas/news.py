@@ -15,6 +15,7 @@ class NewsCreate(NewsBase):
 
 class News(NewsBase):
     id: int
+    tag: Optional[str] = None
 
     class Config:
         from_attributes = True

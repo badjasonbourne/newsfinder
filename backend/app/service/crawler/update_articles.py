@@ -147,6 +147,7 @@ def batch_update_news(url_list: list[str]):
 
 if __name__ == "__main__":
     url_list = [
-        "https://sanhua.himrr.com/daily-news",
+        # "https://sanhua.himrr.com/daily-news",
+        "https://letschuhai.com/recent",
     ]
     batch_update_news(url_list)

@@ -1,0 +1,2 @@
+uvicorn backend.app.main:app --reload
+python -m backend.app.service.crawler.update_articles

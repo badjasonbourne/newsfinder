@@ -75,6 +75,11 @@ export default function Home() {
                     {item.title}
                   </a>
                 </h2>
+                {item.tag && (
+                  <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2">
+                    {item.tag}
+                  </span>
+                )}
                 {item.ai_description && (
                   <p className="text-sm text-gray-500 italic">
                     {item.ai_description}
