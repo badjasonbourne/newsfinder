@@ -7,6 +7,8 @@ export default function Home() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTag, setActiveTag] = useState('全部');
+  const [tags, setTags] = useState(['全部']);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -17,6 +19,11 @@ export default function Home() {
         }
         const data = await response.json();
         setNews(data);
+        
+        // 提取所有独特的标签
+        const uniqueTags = ['全部', ...new Set(data.map(item => item.tag).filter(Boolean))];
+        setTags(uniqueTags);
+        
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -27,6 +34,11 @@ export default function Home() {
 
     fetchNews();
   }, []);
+
+  // 根据当前选中的标签筛选新闻
+  const filteredNews = activeTag === '全部' 
+    ? news 
+    : news.filter(item => item.tag === activeTag);
 
   if (loading) {
     return (
@@ -51,8 +63,26 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">今日新闻</h1>
+        
+        {/* 标签页导航 */}
+        <div className="flex justify-center mb-8 space-x-2 overflow-x-auto">
+          {tags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setActiveTag(tag)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
+                ${activeTag === tag 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white text-gray-600 hover:bg-gray-100'
+                }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {news.map((item) => (
+          {filteredNews.map((item) => (
             <article
               key={item.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
