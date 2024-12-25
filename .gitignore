@@ -9,8 +9,8 @@ test/
 # 后端相关
 backend/__pycache__/
 *.pyc
-.pyo
-.pyd
+*.pyo
+*.pyd
 backend/.Python
 backend/env/
 backend/venv/
@@ -37,3 +37,4 @@ frontend/**/*.md
 *.tmp
 *.temp
 .env 
+.cursorrules
