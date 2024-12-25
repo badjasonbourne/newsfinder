@@ -23,8 +23,7 @@ def extract_news(text: str):
 Extract news articles from the given 36kr author page text and return them in a clean JSON format.
 
 Requirements:
-1. If a article title is not related the cloud computing and AI, please ignore it. ONLY focus on the cloud computing and AI.
-2. For each related article, extract and return ONLY:
+1. For each related article, extract and return ONLY:
    - title: A rewritten, formal and concise version of the original headline
      - Remove unnecessary prefixes like "出海速递｜", "36氪出海·关注｜" etc.
      - Keep it professional and straight to the point
@@ -38,8 +37,9 @@ Requirements:
      3. 出海资讯
      4. AI社交
      5. 协同办公
-     6. 其他
      </tags_list>
+
+2. **IMPORTANT**: If you think a article can not be tagged based on the tag list above, please ignore it.
 
 3. Format requirements:
    - Return ONLY a valid JSON array containing these article objects
