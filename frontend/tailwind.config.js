@@ -11,6 +11,9 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        'bounce-medium': 'bounce 1s infinite',
+      },
     },
   },
   plugins: [],
