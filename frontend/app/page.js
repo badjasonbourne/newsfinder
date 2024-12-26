@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import LoadingSpinner from './components/LoadingSpinner';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -41,11 +42,7 @@ export default function Home() {
     : news.filter(item => item.tag === activeTag);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
