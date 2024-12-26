@@ -60,9 +60,9 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">今日新闻</h1>
+        <h1 className="text-3xl font-bold mb-8 text-center">今日新闻</h1>
         
         {/* 标签页导航 */}
         <div className="flex justify-center mb-8 space-x-2 overflow-x-auto">
@@ -73,7 +73,7 @@ export default function Home() {
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
                 ${activeTag === tag 
                   ? 'bg-blue-600 text-white' 
-                  : 'bg-white text-gray-600 hover:bg-gray-100'
+                  : 'hover:bg-gray-100'
                 }`}
             >
               {tag}
@@ -85,7 +85,7 @@ export default function Home() {
           {filteredNews.map((item) => (
             <article
               key={item.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              className="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
               {item.imageurl && (
                 <img
@@ -95,7 +95,7 @@ export default function Home() {
                 />
               )}
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                <h2 className="text-xl font-semibold mb-2">
                   <a
                     href={item.link}
                     target="_blank"
@@ -111,7 +111,7 @@ export default function Home() {
                   </span>
                 )}
                 {item.ai_description && (
-                  <p className="text-sm text-gray-500 italic">
+                  <p className="text-sm italic">
                     {item.ai_description}
                   </p>
                 )}
