@@ -2,20 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Source Han Serif CN';
-  src: url('./fonts/SourceHanSerifCN-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Source Han Serif CN';
-  src: url('./fonts/SourceHanSerifCN-SemiBold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
-}
-
 :root {
   --background: #FAFAFA;
   --foreground: #13343b;
@@ -31,7 +17,6 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Source Han Serif CN', serif;
 }
 
 @layer utilities {

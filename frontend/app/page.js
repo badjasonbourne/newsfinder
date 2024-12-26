@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './components/LoadingSpinner';
+import NewsCard from './components/NewsCard';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -86,40 +87,7 @@ export default function Home() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {filteredNews.map((item) => (
-            <article
-              key={item.id}
-              className="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-            >
-              {item.imageurl && (
-                <img
-                  src={item.imageurl}
-                  alt={item.title}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-colors duration-200"
-                  >
-                    {item.title}
-                  </a>
-                </h2>
-                {item.tag && (
-                  <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2">
-                    {item.tag}
-                  </span>
-                )}
-                {item.ai_description && (
-                  <p className="text-sm italic">
-                    {item.ai_description}
-                  </p>
-                )}
-              </div>
-            </article>
+            <NewsCard key={item.id} item={item} />
           ))}
         </div>
       </div>
