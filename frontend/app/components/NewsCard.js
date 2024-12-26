@@ -15,7 +15,7 @@ export default function NewsCard({ item }) {
           className="w-full h-48 object-cover"
         />
       )}
-      <div className="p-8">
+      <div className="px-8 pt-10 pb-4">
         <h2 className="text-[18px] font-semibold mb-2">
           <a
             href={item.link}

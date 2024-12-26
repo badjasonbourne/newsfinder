@@ -66,22 +66,23 @@ export default function Home() {
   return (
     <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">今日新闻</h1>
+        <h1 className="text-3xl font-bold mb-8">今日新闻</h1>
         
         {/* 标签页导航 */}
-        <div className="flex justify-center mb-8 space-x-2 overflow-x-auto">
+        <div className="mb-8 whitespace-nowrap overflow-x-auto border-b border-gray-200">
           {tags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => setActiveTag(tag)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
-                ${activeTag === tag 
-                  ? 'bg-blue-600 text-white' 
-                  : 'hover:bg-gray-100'
-                }`}
-            >
-              {tag}
-            </button>
+            <div key={tag} className="relative inline-block">
+              <button
+                onClick={() => setActiveTag(tag)}
+                className={`px-4 py-4 text-sm font-medium transition-all duration-200
+                  ${activeTag === tag 
+                    ? 'border-b-2 border-gray-900' 
+                    : 'text-gray-500 hover:bg-[#E8E8E8]'
+                  }`}
+              >
+                {tag}
+              </button>
+            </div>
           ))}
         </div>
 
