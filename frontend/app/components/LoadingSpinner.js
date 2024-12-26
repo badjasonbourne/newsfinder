@@ -38,10 +38,10 @@ export default function LoadingSpinner() {
               clearInterval(loadInterval);
               setShowLoader(true);
             }
-          }, 50);
+          }, 200);
         }, 1000);
       }
-    }, 10);
+    }, 100);
 
     return () => clearInterval(initInterval);
   }, []);

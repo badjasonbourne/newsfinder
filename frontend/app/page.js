@@ -14,11 +14,17 @@ export default function Home() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/news`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch news');
-        }
-        const data = await response.json();
+        // 使用 Promise.all 确保加载至少持续2秒
+        const [data] = await Promise.all([
+          fetch(`${API_BASE_URL}/news`).then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch news');
+            }
+            return response.json();
+          }),
+          new Promise(resolve => setTimeout(resolve, 5000)) // 2秒延迟
+        ]);
+
         setNews(data);
         
         // 提取所有独特的标签
