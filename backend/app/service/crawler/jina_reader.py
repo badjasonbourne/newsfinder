@@ -22,6 +22,7 @@ def extract_news(text: str):
 
     tz = pytz.timezone('Asia/Shanghai')
     beijing_time = datetime.now(tz).strftime('%Y-%m-%d')
+    print(f"开始提取目录网页")
 
     return f"""
 Extract news articles from the given 36kr author page text and return them in a clean JSON format.
@@ -62,7 +63,7 @@ Example format:
   }}
 ]
 
-To be noticed, today is {beijing_time}.
+To be noticed, today is {beijing_time}. 
 
 Parse the following text and return ONLY the JSON array:
 <text>
@@ -125,6 +126,7 @@ class JinaReader:
     
     def menu_list_general(self, url: str) -> list[dict]:
         text = self.read(url)
+        print("已阅读目录链接")
         result_str = extract_news(text)
         clean_str = re.sub(r'```(json)?', '', result_str).strip()
 

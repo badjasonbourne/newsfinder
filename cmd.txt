@@ -1,2 +1,8 @@
 uvicorn backend.app.main:app --reload
 python -m backend.app.service.crawler.update_articles
+
+
+
+
+
+python -m backend.app.db.operations.delete_news

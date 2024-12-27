@@ -4,6 +4,7 @@ import ell
 import openai
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -114,7 +115,9 @@ def update_news(url: str):
                 summary = summarize_article(content).replace("<summary>", "").replace("</summary>", "")
                 content = extract_content(content).replace("<content>", "").replace("</content>", "")
                 title = title_generator(content).replace("<title>", "").replace("</title>", "")
-                
+
+                time.sleep(3)
+
                 # 执行INSERT操作
                 print("准备开始插入数据库")
                 cur.execute("""
@@ -170,7 +173,7 @@ def batch_update_news(url_list: list[str]):
 
 if __name__ == "__main__":
     url_list = [
-        "https://sanhua.himrr.com/daily-news",
+        "https://www.aihub.cn/news/",
         "https://letschuhai.com/recent",
     ]
     batch_update_news(url_list)
