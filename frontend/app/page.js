@@ -78,13 +78,15 @@ export default function Home() {
             <div key={tag} className="inline-block">
               <button
                 onClick={() => setActiveTag(tag)}
-                className={`px-2 py-2 w-[100px] text-sm font-medium transition-all duration-200`}
+                className={`px-[16px] py-[6px] rounded-[4px] text-sm font-medium transition-all duration-200
+                  hover:bg-[#E8E8E8] text-center`}
               >
                 {tag}
               </button>
-              <div className={`w-[100px] h-[3px] bg-gray-900 mt-[2px]
+              <div className={`h-[2px] bg-gray-700 mt-[4px]
                 ${activeTag === tag ? 'opacity-100' : 'opacity-0'}
-                `}></div>
+                `}>  
+              </div>
             </div>
           ))}
         </div>
