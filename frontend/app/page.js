@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import anime from 'animejs';
 import LoadingSpinner from './components/LoadingSpinner';
 import NewsCard from './components/NewsCard';
 
@@ -11,6 +12,24 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [activeTag, setActiveTag] = useState('全部');
   const [tags, setTags] = useState(['全部']);
+  const [hoverTag, setHoverTag] = useState(null);
+  const sliderRef = useRef(null);
+  const tagsContainerRef = useRef(null);
+
+  // 初始化滑块位置
+  useEffect(() => {
+    if (tagsContainerRef.current && sliderRef.current) {
+      const activeButton = tagsContainerRef.current.querySelector('button');
+      if (activeButton) {
+        const rect = activeButton.getBoundingClientRect();
+        const containerRect = tagsContainerRef.current.getBoundingClientRect();
+        
+        sliderRef.current.style.left = `${rect.left - containerRect.left}px`;
+        sliderRef.current.style.width = `${rect.width}px`;
+        sliderRef.current.style.height = `${rect.height}px`;
+      }
+    }
+  }, [loading]); // 当loading状态改变时（即数据加载完成后）执行
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -73,19 +92,45 @@ export default function Home() {
         <h1 className="text-3xl font-bold mb-8">今日新闻</h1>
         
         {/* 标签页导航 */}
-        <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px]">
+        <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px] relative" ref={tagsContainerRef}>
+          {/* 动画滑块 */}
+          <div 
+            ref={sliderRef}
+            className="absolute bg-[#E8E8E8] rounded-[4px] transition-opacity duration-200"
+            style={{
+              opacity: hoverTag ? 1 : 0,
+              pointerEvents: 'none'
+            }}
+          />
+          
           {tags.map((tag) => (
             <div key={tag} className="inline-block">
               <button
                 onClick={() => setActiveTag(tag)}
-                className={`px-[16px] py-[6px] rounded-[4px] text-sm font-medium transition-all duration-200
-                  hover:bg-[#E8E8E8] text-center`}
+                onMouseEnter={(e) => {
+                  setHoverTag(tag);
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const containerRect = tagsContainerRef.current.getBoundingClientRect();
+                  
+                  anime({
+                    targets: sliderRef.current,
+                    left: rect.left - containerRect.left,
+                    width: rect.width,
+                    height: rect.height,
+                    easing: 'easeOutExpo',
+                    duration: 600
+                  });
+                }}
+                onMouseLeave={() => {
+                  setHoverTag(null);
+                }}
+                className={`px-[16px] py-[6px] rounded-[4px] text-sm font-medium text-center relative`}
               >
                 {tag}
               </button>
-              <div className={`h-[2px] bg-gray-700 mt-[4px]
+              <div className={`h-[2px] bg-gray-700 mt-[4px] transition-opacity duration-200
                 ${activeTag === tag ? 'opacity-100' : 'opacity-0'}
-                `}>  
+                `}>
               </div>
             </div>
           ))}
