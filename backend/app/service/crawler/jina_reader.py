@@ -16,7 +16,7 @@ client = openai.OpenAI(
     base_url=os.getenv("OPENROUTER_BASE_URL")
 )
 
-@ell.simple(model="google/gemini-2.0-flash-exp:free", client=client)
+@ell.simple(model="google/gemini-pro-1.5", client=client)
 def extract_news(text: str):
     """You are a helpful assistant."""
 

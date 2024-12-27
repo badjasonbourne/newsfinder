@@ -12,7 +12,7 @@ client = openai.OpenAI(
     base_url=os.getenv("OPENROUTER_BASE_URL")
 )
 
-model = "google/gemini-flash-1.5"
+model = "openai/gpt-4o-mini"
 
 @ell.simple(model=model, client=client)
 def summarize_article(text: str):
@@ -22,6 +22,20 @@ Summarize the following news articlem, at least 30 words, at most 50 words:
 <text>
 {text}
 </text>
+
+Please summarize the following content directly and naturally, focusing on key points without referring to it as an article or news report.
+
+For example:
+<example>
+Here is the poor example:
+<poor_example>
+This article discusses Apple's latest product launch, where the text mentions that the company unveiled...
+</poor_example>
+Here is the good example:
+<good_example>
+Apple unveiled its Vision Pro headset priced at $3,499, featuring advanced mixed reality capabilities and a new operating system...
+</good_example>
+</example>
 
 Directly output the summary, no other information. No matter what language the article is, your response should be in Chinese. Respond in paragraph format, no list.
 
@@ -50,16 +64,22 @@ xxxxxxxx
 
 @ell.simple(model=model, client=client)
 def extract_content(text: str):
-    """Your are good at extracting the content of a news from a markdown text, which is crawled from a website, containing some irrelevant content."""
+    """Your are good at extracting the news content of a news article from a markdown text, which is crawled from a website, containing some irrelevant content."""
     return f"""
-Extract the content of the following news article:
+Extract the complete main news article from the provided webpage content, ensuring no details are missed from the primary article. Exclude all auxiliary content like recommended articles, footers, copyright notices, sharing rules, comments, and advertisements. 
+
+The text you will process is, noticing that only one main news is in the text:
 <text>
 {text}
 </text>
 
-Directly output the content, no other information. Please do not include any other information in your response. Use the original text related the topic, but not the whole text. No matter what language the article is, your response should be in Chinese.
+Directly output the content, no other information. Please do not include any other information in your response. No matter what language the article is, your response should be in Chinese.
 
-Put the content in <content> tags, without any other information. For example:
+To be noticed, if you want to make some text bold and there is a "。" in the text, you should use **xxxxx.** instead of **xxxxx。**
+
+Remember, Exclude all auxiliary content like recommended articles, footers, copyright notices, sharing rules, comments, and advertisements. 
+
+Put the content in <content> tags, without any other information, **formatted as markdown**. For example:
 <content>
 xxxxxxxx
 </content>
