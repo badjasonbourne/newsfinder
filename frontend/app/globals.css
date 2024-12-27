@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'remixicon/fonts/remixicon.css';
+
 :root {
   --background: #FAFAFA;
   --foreground: #13343b;
