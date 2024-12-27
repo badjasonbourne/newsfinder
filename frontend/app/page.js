@@ -69,19 +69,18 @@ export default function Home() {
         <h1 className="text-3xl font-bold mb-8">今日新闻</h1>
         
         {/* 标签页导航 */}
-        <div className="mb-8 whitespace-nowrap overflow-x-auto border-b border-gray-200">
+        <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px]">
           {tags.map((tag) => (
-            <div key={tag} className="relative inline-block">
+            <div key={tag} className="inline-block">
               <button
                 onClick={() => setActiveTag(tag)}
-                className={`px-4 py-4 text-sm font-medium transition-all duration-200
-                  ${activeTag === tag 
-                    ? 'border-b-2 border-gray-900' 
-                    : 'text-gray-500 hover:bg-[#E8E8E8]'
-                  }`}
+                className={`px-2 py-2 w-[100px] text-sm font-medium transition-all duration-200`}
               >
                 {tag}
               </button>
+              <div className={`w-[100px] h-[3px] bg-gray-900 mt-[2px]
+                ${activeTag === tag ? 'opacity-100' : 'opacity-0'}
+                `}></div>
             </div>
           ))}
         </div>
