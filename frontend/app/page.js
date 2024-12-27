@@ -49,7 +49,11 @@ export default function Home() {
     : news.filter(item => item.tag === activeTag);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (error) {
