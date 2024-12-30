@@ -1,6 +1,6 @@
 from backend.app.db.database import get_db, close_db
 
-def create_tables(sql):
+def execute_sql(sql):
     conn = get_db()
     cur = conn.cursor()
     try:
@@ -14,7 +14,7 @@ def create_tables(sql):
 
 if __name__ == '__main__':
     # 创建标签表
-    create_tables("""
+    execute_sql("""
     CREATE TABLE IF NOT EXISTS tags (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL UNIQUE
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     """)
     
     # 创建新闻-标签关联表
-    create_tables("""
+    execute_sql("""
     CREATE TABLE IF NOT EXISTS news_tags (
         news_id INT4 NOT NULL,
         tag_id INT4 NOT NULL,
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     """)
     
     # 创建触发器函数来确保每条新闻至少有一个标签
-    create_tables("""
+    execute_sql("""
     CREATE OR REPLACE FUNCTION check_news_tags()
     RETURNS TRIGGER AS $$
     BEGIN
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     """)
     
     # 创建触发器
-    create_tables("""
+    execute_sql("""
     DROP TRIGGER IF EXISTS ensure_news_has_tags ON news_tags;
     CREATE TRIGGER ensure_news_has_tags
     BEFORE DELETE ON news_tags

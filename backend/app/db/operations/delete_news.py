@@ -33,6 +33,39 @@ def delete_news_range(start_id: int, end_id: int):
     finally:
         close_db(conn)
 
+def delete_news_by_id(news_id: int):
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        # 开始事务
+        cur.execute("BEGIN;")
+        
+        # 临时禁用触发器
+        cur.execute("ALTER TABLE news_tags DISABLE TRIGGER ensure_news_has_tags;")
+        
+        # 删除指定ID的新闻
+        cur.execute("""
+            DELETE FROM news 
+            WHERE id = %s;
+        """, (news_id,))
+        
+        # 重新启用触发器
+        cur.execute("ALTER TABLE news_tags ENABLE TRIGGER ensure_news_has_tags;")
+        
+        # 提交事务
+        cur.execute("COMMIT;")
+        
+        print(f"Successfully deleted news with ID {news_id}")
+        
+    except Exception as e:
+        # 发生错误时回滚
+        cur.execute("ROLLBACK;")
+        print(f"Error deleting news: {e}")
+    finally:
+        close_db(conn)
+
 if __name__ == '__main__':
-    # 删除ID从106到121的新闻
-    delete_news_range(136, 137)
+
+    # delete_news_range(84, 85)
+
+    delete_news_by_id(154)

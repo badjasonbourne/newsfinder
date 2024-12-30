@@ -13,7 +13,7 @@ client = openai.OpenAI(
     base_url=os.getenv("OPENROUTER_BASE_URL")
 )
 
-model = "openai/gpt-4o-mini"
+model = "deepseek/deepseek-chat"
 
 @ell.simple(model=model, client=client)
 def summarize_article(text: str):
@@ -110,13 +110,17 @@ def update_news(url: str):
                 link = feed["link"]
                 date = feed["date"]
                 content = reader.read(link)
+                print(f"link: {link}")
                 
                 print("use llm to generate necessary information")
                 summary = summarize_article(content).replace("<summary>", "").replace("</summary>", "")
+                print("summary generated")
                 content = extract_content(content).replace("<content>", "").replace("</content>", "")
+                print("content generated")
                 title = title_generator(content).replace("<title>", "").replace("</title>", "")
+                print("title generated")
 
-                time.sleep(3)
+                time.sleep(4)
 
                 # 执行INSERT操作
                 print("准备开始插入数据库")
