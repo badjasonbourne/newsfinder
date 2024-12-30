@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import anime from 'animejs';
+import Image from 'next/image';
 import LoadingSpinner from './components/LoadingSpinner';
 import NewsCard from './components/NewsCard';
 
@@ -89,10 +90,12 @@ export default function Home() {
   return (
     <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">今日新闻</h1>
+        <div className="flex justify-center mb-3 mx-auto">
+          <Image src="/Logo_1.svg" alt="Logo" width={220} height={100} priority />
+        </div>
         
         {/* 标签页导航 */}
-        <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px] relative" ref={tagsContainerRef}>
+        <div className="mb-8 whitespace-nowrap  flex flex-row gap-[0px] relative" ref={tagsContainerRef}>
           {/* 动画滑块 */}
           <div 
             ref={sliderRef}

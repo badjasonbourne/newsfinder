@@ -6,9 +6,9 @@ export default function NewsCard({ item }) {
 
   return (
     <>
-      <article className="rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-300 relative group">
+      <article className="rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-200 relative group">
         {item.tag && (
-          <span className="absolute bg-[#195A5D] text-[13px] text-white top-0 left-0 rounded-br-[4px] px-3 py-1">
+          <span className="absolute bg-[#134648] text-[13px] text-white top-0 left-0 rounded-br-[4px] px-3 py-1">
             {item.tag}
           </span>
         )}
@@ -21,7 +21,7 @@ export default function NewsCard({ item }) {
         )}
         <button
           onClick={() => setIsModalOpen(true)}
-          className="absolute top-[12px] right-[12px] w-[24px] h-[24px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+          className="absolute top-[12px] right-[12px] w-[32px] h-[32px] text-[18px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
         >
           <i className="ri-expand-diagonal-line"></i>
         </button>
