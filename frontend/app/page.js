@@ -5,6 +5,7 @@ import Image from 'next/image';
 import LoadingSpinner from './components/LoadingSpinner';
 import NewsCard from './components/NewsCard';
 import ReportModal from './components/ReportModal';
+import ToolSelector from './components/ToolSelector';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -20,6 +21,10 @@ export default function Home() {
   const [selectMode, setSelectMode] = useState(false);
   const [selectedNews, setSelectedNews] = useState([]);
   const [showReport, setShowReport] = useState(false);
+  const [toolSelectorOpen, setToolSelectorOpen] = useState(false);
+  const [toolSelectorPosition, setToolSelectorPosition] = useState({ x: 0, y: 0 });
+  const [currentTool, setCurrentTool] = useState('default');
+  const [isSelecting, setIsSelecting] = useState(false);
 
   // 初始化滑块位置
   useEffect(() => {
@@ -87,8 +92,48 @@ export default function Home() {
     return content;
   };
 
-  // Add handler for news selection
+  // 处理鼠标中键
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      if (e.button === 1) { // 中键
+        e.preventDefault();
+        setToolSelectorPosition({ x: e.clientX, y: e.clientY });
+        setToolSelectorOpen(true);
+      }
+    };
+
+    const handleMouseUp = (e) => {
+      if (e.button === 1) {
+        setToolSelectorOpen(false);
+      }
+    };
+
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
+  // 处理工具选择
+  const handleToolSelect = (tool) => {
+    setCurrentTool(tool);
+    setToolSelectorOpen(false);
+    setIsSelecting(tool === 'lasso');
+  };
+
+  // 处理新闻选择
   const handleNewsSelect = (newsItem) => {
+    if (currentTool !== 'lasso') return;
+    
     setSelectedNews(prev => {
       const isSelected = prev.some(item => item.id === newsItem.id);
       if (isSelected) {
@@ -98,6 +143,17 @@ export default function Home() {
       }
     });
   };
+
+  // 添加一个函数来处理文档的光标类
+  useEffect(() => {
+    document.body.style.cursor = currentTool === 'lasso' ? 'none' : 'default';
+    document.documentElement.classList.toggle('lasso-cursor', currentTool === 'lasso');
+    
+    return () => {
+      document.body.style.cursor = 'default';
+      document.documentElement.classList.remove('lasso-cursor');
+    };
+  }, [currentTool]);
 
   if (loading) {
     return (
@@ -119,43 +175,15 @@ export default function Home() {
   }
 
   return (
-    <main className={`min-h-screen py-8 px-4 sm:px-6 lg:px-8 transition-colors duration-300 ease-in-out
-      ${selectMode ? 'bg-gray-100' : 'bg-white'}`}>
-      <div className={`max-w-[80%] mx-auto transition-all duration-300 ease-in-out
-        ${selectMode ? 'opacity-90' : 'opacity-100'}`}>
+    <main className={`min-h-screen py-8 px-4 sm:px-6 lg:px-8`}>
+      <div className="max-w-[80%] mx-auto">
         <div className="flex justify-center mb-3 mx-auto">
           <Image src="/Logo_1.svg" alt="Logo" width={220} height={100} priority />
         </div>
         
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex gap-4">
-            <button
-              onClick={() => {
-                setSelectMode(!selectMode);
-                if (selectMode) {
-                  setSelectedNews([]);
-                }
-              }}
-              className={`px-4 py-2 text-white rounded-md transition-colors duration-200
-                ${selectMode 
-                  ? 'bg-gray-500 hover:bg-gray-600' 
-                  : 'bg-[#134648] hover:bg-[#0d3234]'}`}
-            >
-              {selectMode ? '取消选择' : '生成报告'}
-            </button>
-            
-            {selectMode && selectedNews.length > 0 && (
-              <button
-                onClick={() => setShowReport(true)}
-                className="px-4 py-2 bg-[#348FA2] text-white rounded-md hover:bg-[#267a8d] transition-colors"
-              >
-                预览报告 ({selectedNews.length})
-              </button>
-            )}
-          </div>
-        </div>
-
+        {/* 标签页导航 */}
         <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px] relative" ref={tagsContainerRef}>
+          {/* 动画滑块 */}
           <div 
             ref={sliderRef}
             className="absolute bg-[#E8E8E8] rounded-[4px] transition-opacity duration-200"
@@ -198,18 +226,38 @@ export default function Home() {
           ))}
         </div>
 
+        {/* 如果有选中的新闻，显示预览报告按钮 */}
+        {selectedNews.length > 0 && (
+          <div className="fixed bottom-8 right-8 z-50">
+            <button
+              onClick={() => setShowReport(true)}
+              className="px-6 py-3 bg-[#134648] text-white rounded-full shadow-lg hover:bg-[#0d3234] transition-colors flex items-center gap-2"
+            >
+              <i className="ri-file-text-line"></i>
+              预览报告 ({selectedNews.length})
+            </button>
+          </div>
+        )}
+
         <div className="grid gap-8 md:grid-cols-2">
           {filteredNews.map((item) => (
             <NewsCard 
               key={item.id} 
               item={item}
-              selectable={selectMode}
+              selectable={isSelecting}
               selected={selectedNews.some(news => news.id === item.id)}
               onSelect={handleNewsSelect}
+              className="news-card"
             />
           ))}
         </div>
       </div>
+
+      <ToolSelector
+        isOpen={toolSelectorOpen}
+        onSelect={handleToolSelect}
+        position={toolSelectorPosition}
+      />
 
       <ReportModal
         isOpen={showReport}
