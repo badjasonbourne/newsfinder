@@ -42,7 +42,7 @@ export default function Home() {
             }
             return response.json();
           }),
-          new Promise(resolve => setTimeout(resolve, 5000)) // 2秒延迟
+          new Promise(resolve => setTimeout(resolve, 1000)) // 1秒延迟
         ]);
 
         setNews(data);
