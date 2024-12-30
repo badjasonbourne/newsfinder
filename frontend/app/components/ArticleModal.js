@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
 
 export default function ArticleModal({ isOpen, onClose, article }) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
-        <div className="px-12 py-10">
-          <div className="flex justify-between items-start mb-4">
+        <div className="sticky top-0 bg-white px-12 py-5 border-b">
+          <div className="flex justify-between items-start">
             <h2 className="text-2xl font-bold">{article.title}</h2>
             <button
               onClick={onClose}
@@ -19,7 +31,8 @@ export default function ArticleModal({ isOpen, onClose, article }) {
               <i className="ri-close-line text-2xl"></i>
             </button>
           </div>
-          
+        </div>
+        <div className="px-20 py-6">
           {article.imageurl && (
             <img
               src={article.imageurl}
