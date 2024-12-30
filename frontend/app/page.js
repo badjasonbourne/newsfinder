@@ -25,6 +25,7 @@ export default function Home() {
   const [toolSelectorPosition, setToolSelectorPosition] = useState({ x: 0, y: 0 });
   const [currentTool, setCurrentTool] = useState('default');
   const [isSelecting, setIsSelecting] = useState(false);
+  const [hoveredTool, setHoveredTool] = useState(null);
 
   // 初始化滑块位置
   useEffect(() => {
@@ -105,7 +106,19 @@ export default function Home() {
     const handleMouseUp = (e) => {
       if (e.button === 1) {
         setToolSelectorOpen(false);
+        // 如果有悬停的工具，则选择它
+        if (hoveredTool) {
+          handleToolSelect(hoveredTool);
+        }
       }
+    };
+
+    const handleMouseMove = (e) => {
+      // 只在工具选择器打开时处理鼠标移动
+      if (!toolSelectorOpen) return;
+      
+      // 防止中键拖动时的默认行为
+      e.preventDefault();
     };
 
     const handleContextMenu = (e) => {
@@ -114,19 +127,22 @@ export default function Home() {
 
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('contextmenu', handleContextMenu);
 
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, []);
+  }, [toolSelectorOpen, hoveredTool]); // 添加 hoveredTool 作为依赖
 
   // 处理工具选择
   const handleToolSelect = (tool) => {
     setCurrentTool(tool);
     setToolSelectorOpen(false);
+    setHoveredTool(null); // 重置悬停状态
     setIsSelecting(tool === 'lasso');
   };
 
@@ -257,6 +273,8 @@ export default function Home() {
         isOpen={toolSelectorOpen}
         onSelect={handleToolSelect}
         position={toolSelectorPosition}
+        onHover={setHoveredTool}
+        hoveredTool={hoveredTool}
       />
 
       <ReportModal
