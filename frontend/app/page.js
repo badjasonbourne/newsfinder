@@ -127,7 +127,7 @@ export default function Home() {
                 onMouseLeave={() => {
                   setHoverTag(null);
                 }}
-                className={`px-[16px] py-[6px] rounded-[4px] text-sm font-medium text-center relative`}
+                className={`px-[16px] py-[6px] rounded-[4px] text-[14px] font-medium text-center relative`}
               >
                 {tag}
               </button>
