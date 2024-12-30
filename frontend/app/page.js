@@ -87,12 +87,12 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen py-8 px-8">
-      <div className="max-w-[80%] mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">今日新闻</h1>
+    <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">今日新闻</h1>
         
         {/* 标签页导航 */}
-        <div className="mb-8 whitespace-nowrap flex flex-row gap-[0px] relative justify-center" ref={tagsContainerRef}>
+        <div className="mb-8 whitespace-nowrap border-b border-gray-200 flex flex-row gap-[0px] relative" ref={tagsContainerRef}>
           {/* 动画滑块 */}
           <div 
             ref={sliderRef}
@@ -128,7 +128,7 @@ export default function Home() {
               >
                 {tag}
               </button>
-              <div className={`h-[2.6px] rounded-full bg-[#425D62] mt-[4px] transition-opacity duration-200
+              <div className={`h-[2px] bg-gray-700 mt-[4px] transition-opacity duration-200
                 ${activeTag === tag ? 'opacity-100' : 'opacity-0'}
                 `}>
               </div>
