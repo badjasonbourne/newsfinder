@@ -7,7 +7,7 @@ test/
 .DS_Store
 
 # 后端相关
-backend/__pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
 *.pyd
@@ -16,6 +16,8 @@ backend/env/
 backend/venv/
 backend/.env
 backend/*.log
+
+
 
 # 前端相关
 /node_modules
