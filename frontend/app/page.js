@@ -128,7 +128,7 @@ export default function Home() {
               >
                 {tag}
               </button>
-              <div className={`h-[2.6px] rounded-full bg-[#425D62] mt-[4px] transition-opacity duration-200 mx-auto w-[80%]
+              <div className={`h-[2.6px] rounded-full bg-[#425D62] mt-[4px] transition-opacity duration-200
                 ${activeTag === tag ? 'opacity-100' : 'opacity-0'}
                 `}>
               </div>
