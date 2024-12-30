@@ -26,7 +26,7 @@ export default function NewsCard({ item }) {
           <i className="ri-expand-diagonal-line"></i>
         </button>
         <div className="px-8 pt-10 pb-4">
-          <h2 className="text-[18px] font-semibold mb-2">
+          <h2 className="text-[18px] font-semibold mb-1">
             <a
               href={item.link}
               target="_blank"
@@ -36,6 +36,11 @@ export default function NewsCard({ item }) {
               {item.title}
             </a>
           </h2>
+          {item.date && (
+            <p className="text-[#88999C] text-[14px] mb-2">
+              {item.date}
+            </p>
+          )}
           {item.ai_description && (
             <p className="">
               {item.ai_description}

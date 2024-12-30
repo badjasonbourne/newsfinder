@@ -136,7 +136,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2">
           {filteredNews.map((item) => (
             <NewsCard key={item.id} item={item} />
           ))}
