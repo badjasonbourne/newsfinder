@@ -26,6 +26,7 @@ export default function Home() {
   const [currentTool, setCurrentTool] = useState('default');
   const [isSelecting, setIsSelecting] = useState(false);
   const [hoveredTool, setHoveredTool] = useState(null);
+  const [lastSelectedNews, setLastSelectedNews] = useState([]);
 
   // 初始化滑块位置
   useEffect(() => {
@@ -142,8 +143,18 @@ export default function Home() {
   const handleToolSelect = (tool) => {
     setCurrentTool(tool);
     setToolSelectorOpen(false);
-    setHoveredTool(null); // 重置悬停状态
-    setIsSelecting(tool === 'lasso');
+    setHoveredTool(null);
+    
+    if (tool === 'lasso') {
+      // 进入套索模式时，恢复上次的选择
+      setIsSelecting(true);
+      setSelectedNews(lastSelectedNews);
+    } else {
+      // 切换到普通光标时，保存当前选择并清空选中状态
+      setIsSelecting(false);
+      setLastSelectedNews(selectedNews);
+      setSelectedNews([]);
+    }
   };
 
   // 处理新闻选择
@@ -152,21 +163,25 @@ export default function Home() {
     
     setSelectedNews(prev => {
       const isSelected = prev.some(item => item.id === newsItem.id);
-      if (isSelected) {
-        return prev.filter(item => item.id !== newsItem.id);
-      } else {
-        return [...prev, newsItem];
-      }
+      const newSelection = isSelected
+        ? prev.filter(item => item.id !== newsItem.id)
+        : [...prev, newsItem];
+      
+      // 同时更新 lastSelectedNews
+      setLastSelectedNews(newSelection);
+      return newSelection;
     });
   };
 
-  // 添加一个函数来处理文档的光标类
+  // 修改光标处理的 useEffect
   useEffect(() => {
-    document.body.style.cursor = currentTool === 'lasso' ? 'none' : 'default';
-    document.documentElement.classList.toggle('lasso-cursor', currentTool === 'lasso');
+    if (currentTool === 'lasso') {
+      document.documentElement.classList.add('lasso-cursor');
+    } else {
+      document.documentElement.classList.remove('lasso-cursor');
+    }
     
     return () => {
-      document.body.style.cursor = 'default';
       document.documentElement.classList.remove('lasso-cursor');
     };
   }, [currentTool]);
