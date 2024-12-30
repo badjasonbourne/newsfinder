@@ -38,13 +38,16 @@ Requirements:
    - tags: The tags of the article (Notably, only select one tag that is most relevant to the article). ONLY select tags from the following list:
      <tags_list>
      1. 云计算
+       - 1.1 说明：云计算指的是云计算相关的资讯，例如云计算厂商的动态、云计算市场的趋势，但是不包含AI应用，可以是AI相关的IaaS、PaaS。
      2. 大模型LLM
      3. 出海资讯
+       - 3.1 说明：出海资讯指的是中国企业出海相关的资讯，可以是出海相关的政策、法规、市场动态、企业出海案例等。
      4. AI社交
      5. 协同办公
+       - 5.1 说明：协同办公指的是各类OA产品的动向，例如钉钉、飞书、企业微信、Slack，Teams等。
      </tags_list>
 
-2. **IMPORTANT**: If you think a article can not be tagged based on the tag list above, please ignore it.
+2. **IMPORTANT**: If you think a article can not be tagged based on the tag list above, please ignore it. But do not be too strict.
 
 3. Format requirements:
    - Return ONLY a valid JSON array containing these article objects

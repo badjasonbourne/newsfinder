@@ -66,6 +66,6 @@ def delete_news_by_id(news_id: int):
 
 if __name__ == '__main__':
 
-    # delete_news_range(84, 85)
+    delete_news_range(155, 156)
 
-    delete_news_by_id(154)
+    # delete_news_by_id(154)
