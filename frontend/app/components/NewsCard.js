@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import ArticleModal from './ArticleModal';
 
-export default function NewsCard({ item }) {
+export default function NewsCard({ item, selectable, selected, onSelect }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <article className="rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-200 relative group">
+      <article 
+        className={`rounded-[2px] text-[14px] overflow-hidden border-[0.5px] relative group
+          transition-all duration-300 ease-in-out
+          ${selectable ? 'cursor-pointer hover:shadow-[0_0_20px_rgba(0,0,0,0.15)]' : ''} 
+          ${selected 
+            ? 'border-[#134648] border-2 shadow-none' 
+            : selectable 
+              ? 'border-gray-200 shadow-[0_0_15px_rgba(0,0,0,0.1)]' 
+              : 'border-gray-200'
+          }`}
+        onClick={(e) => {
+          if (e.target.closest('button')) return;
+          selectable && onSelect && onSelect(item);
+        }}
+      >
         {item.tag && (
           <span className="absolute bg-[#134648] text-[13px] text-white top-0 left-0 rounded-br-[4px] px-3 py-1">
             {item.tag}
@@ -32,6 +46,11 @@ export default function NewsCard({ item }) {
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#348FA2] transition-colors duration-200"
+              onClick={(e) => {
+                if (selectable) {
+                  e.preventDefault(); // 在选择模式下阻止链接跳转
+                }
+              }}
             >
               {item.title}
             </a>
