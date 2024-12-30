@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
@@ -6,6 +6,18 @@ import useStore from '../store/useStore';
 
 export default function ReportModal() {
   const { showReport, setShowReport, selectedNews } = useStore();
+
+  useEffect(() => {
+    if (showReport) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showReport]);
 
   const copyToClipboard = async () => {
     try {
@@ -33,7 +45,7 @@ export default function ReportModal() {
   if (!showReport) return null;
 
   return (
-    <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4 default-cursor">
       <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">新闻报告预览</h2>
