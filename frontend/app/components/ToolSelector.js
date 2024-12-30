@@ -1,7 +1,16 @@
 import React from 'react';
+import useStore from '../store/useStore';
 
-export default function ToolSelector({ isOpen, onSelect, position, onHover, hoveredTool }) {
-  if (!isOpen) return null;
+export default function ToolSelector() {
+  const {
+    toolSelectorOpen,
+    toolSelectorPosition,
+    hoveredTool,
+    handleToolSelect,
+    setHoveredTool,
+  } = useStore();
+
+  if (!toolSelectorOpen) return null;
 
   const tools = [
     { id: 'default', icon: 'ri-cursor-line', label: '普通光标' },
@@ -12,8 +21,8 @@ export default function ToolSelector({ isOpen, onSelect, position, onHover, hove
     <div 
       className="fixed z-50 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
       style={{ 
-        left: position.x, 
-        top: position.y,
+        left: toolSelectorPosition.x, 
+        top: toolSelectorPosition.y,
         transform: 'translate(-50%, -50%)'
       }}
     >
@@ -21,8 +30,8 @@ export default function ToolSelector({ isOpen, onSelect, position, onHover, hove
         {tools.map(tool => (
           <div
             key={tool.id}
-            onMouseEnter={() => onHover(tool.id)}
-            onMouseLeave={() => onHover(null)}
+            onMouseEnter={() => setHoveredTool(tool.id)}
+            onMouseLeave={() => setHoveredTool(null)}
             className={`flex items-center w-full px-4 py-2 text-sm text-gray-700 rounded transition-colors
               ${hoveredTool === tool.id ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
           >

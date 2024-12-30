@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import ArticleModal from './ArticleModal';
+import useStore from '../store/useStore';
 
-export default function NewsCard({ item, selectable, selected, onSelect, className }) {
+export default function NewsCard({ item }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isSelecting, selectedNews, handleNewsSelect } = useStore();
+
+  const selected = selectedNews.some(news => news.id === item.id);
 
   return (
     <>
       <article 
         className={`rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-200 relative group 
-          ${selectable ? 'cursor-pointer' : ''} 
-          ${selected ? 'ring-2 ring-[#134648]' : ''}
-          ${className}`}
-        onClick={() => selectable && onSelect && onSelect(item)}
+          ${isSelecting ? 'cursor-pointer' : ''} 
+          ${selected ? 'ring-2 ring-[#134648]' : ''}`}
+        onClick={() => isSelecting && handleNewsSelect(item)}
       >
         {item.tag && (
           <span className="absolute bg-[#134648] text-[13px] text-white top-0 left-0 rounded-br-[4px] px-3 py-1">

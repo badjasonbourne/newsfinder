@@ -1,32 +1,40 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import anime from 'animejs';
 import Image from 'next/image';
 import LoadingSpinner from './components/LoadingSpinner';
 import NewsCard from './components/NewsCard';
 import ReportModal from './components/ReportModal';
 import ToolSelector from './components/ToolSelector';
-
-const API_BASE_URL = 'http://localhost:8000/api';
+import useStore from './store/useStore';
 
 export default function Home() {
-  const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeTag, setActiveTag] = useState('全部');
-  const [tags, setTags] = useState(['全部']);
-  const [hoverTag, setHoverTag] = useState(null);
+  const {
+    news,
+    loading,
+    error,
+    activeTag,
+    tags,
+    selectedNews,
+    currentTool,
+    toolSelectorOpen,
+    toolSelectorPosition,
+    hoveredTool,
+    isSelecting,
+    showReport,
+    fetchNews,
+    setActiveTag,
+    handleToolSelect,
+    handleNewsSelect,
+    setToolSelectorOpen,
+    setToolSelectorPosition,
+    setHoveredTool,
+    setShowReport,
+  } = useStore();
+
   const sliderRef = useRef(null);
   const tagsContainerRef = useRef(null);
-  const [selectMode, setSelectMode] = useState(false);
-  const [selectedNews, setSelectedNews] = useState([]);
-  const [showReport, setShowReport] = useState(false);
-  const [toolSelectorOpen, setToolSelectorOpen] = useState(false);
-  const [toolSelectorPosition, setToolSelectorPosition] = useState({ x: 0, y: 0 });
-  const [currentTool, setCurrentTool] = useState('default');
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [hoveredTool, setHoveredTool] = useState(null);
-  const [lastSelectedNews, setLastSelectedNews] = useState([]);
+  const [hoverTag, setHoverTag] = useState(null);
 
   // 初始化滑块位置
   useEffect(() => {
@@ -41,38 +49,65 @@ export default function Home() {
         sliderRef.current.style.height = `${rect.height}px`;
       }
     }
-  }, [loading]); // 当loading状态改变时（即数据加载完成后）执行
+  }, [loading]);
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        // 使用 Promise.all 确保加载至少持续2秒
-        const [data] = await Promise.all([
-          fetch(`${API_BASE_URL}/news`).then(response => {
-            if (!response.ok) {
-              throw new Error('Failed to fetch news');
-            }
-            return response.json();
-          }),
-          new Promise(resolve => setTimeout(resolve, 1000)) // 1秒延迟
-        ]);
+    fetchNews();
+  }, [fetchNews]);
 
-        setNews(data);
-        
-        // 提取所有独特的标签
-        const uniqueTags = ['全部', ...new Set(data.map(item => item.tag).filter(Boolean))];
-        setTags(uniqueTags);
-        
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+  // 处理鼠标中键
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        setToolSelectorPosition({ x: e.clientX, y: e.clientY });
+        setToolSelectorOpen(true);
       }
     };
 
-    fetchNews();
-  }, []);
+    const handleMouseUp = (e) => {
+      if (e.button === 1) {
+        setToolSelectorOpen(false);
+        if (hoveredTool) {
+          handleToolSelect(hoveredTool);
+        }
+      }
+    };
+
+    const handleMouseMove = (e) => {
+      if (!toolSelectorOpen) return;
+      e.preventDefault();
+    };
+
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, [toolSelectorOpen, hoveredTool, handleToolSelect, setToolSelectorPosition, setToolSelectorOpen]);
+
+  // 修改光标处理的 useEffect
+  useEffect(() => {
+    if (currentTool === 'lasso') {
+      document.documentElement.classList.add('lasso-cursor');
+    } else {
+      document.documentElement.classList.remove('lasso-cursor');
+    }
+    
+    return () => {
+      document.documentElement.classList.remove('lasso-cursor');
+    };
+  }, [currentTool]);
 
   // 根据当前选中的标签筛选新闻
   const filteredNews = activeTag === '全部' 
@@ -93,98 +128,6 @@ export default function Home() {
     
     return content;
   };
-
-  // 处理鼠标中键
-  useEffect(() => {
-    const handleMouseDown = (e) => {
-      if (e.button === 1) { // 中键
-        e.preventDefault();
-        setToolSelectorPosition({ x: e.clientX, y: e.clientY });
-        setToolSelectorOpen(true);
-      }
-    };
-
-    const handleMouseUp = (e) => {
-      if (e.button === 1) {
-        setToolSelectorOpen(false);
-        // 如果有悬停的工具，则选择它
-        if (hoveredTool) {
-          handleToolSelect(hoveredTool);
-        }
-      }
-    };
-
-    const handleMouseMove = (e) => {
-      // 只在工具选择器打开时处理鼠标移动
-      if (!toolSelectorOpen) return;
-      
-      // 防止中键拖动时的默认行为
-      e.preventDefault();
-    };
-
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-    };
-
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('contextmenu', handleContextMenu);
-
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, [toolSelectorOpen, hoveredTool]); // 添加 hoveredTool 作为依赖
-
-  // 处理工具选择
-  const handleToolSelect = (tool) => {
-    setCurrentTool(tool);
-    setToolSelectorOpen(false);
-    setHoveredTool(null);
-    
-    if (tool === 'lasso') {
-      // 进入套索模式时，恢复上次的选择
-      setIsSelecting(true);
-      setSelectedNews(lastSelectedNews);
-    } else {
-      // 切换到普通光标时，保存当前选择并清空选中状态
-      setIsSelecting(false);
-      setLastSelectedNews(selectedNews);
-      setSelectedNews([]);
-    }
-  };
-
-  // 处理新闻选择
-  const handleNewsSelect = (newsItem) => {
-    if (currentTool !== 'lasso') return;
-    
-    setSelectedNews(prev => {
-      const isSelected = prev.some(item => item.id === newsItem.id);
-      const newSelection = isSelected
-        ? prev.filter(item => item.id !== newsItem.id)
-        : [...prev, newsItem];
-      
-      // 同时更新 lastSelectedNews
-      setLastSelectedNews(newSelection);
-      return newSelection;
-    });
-  };
-
-  // 修改光标处理的 useEffect
-  useEffect(() => {
-    if (currentTool === 'lasso') {
-      document.documentElement.classList.add('lasso-cursor');
-    } else {
-      document.documentElement.classList.remove('lasso-cursor');
-    }
-    
-    return () => {
-      document.documentElement.classList.remove('lasso-cursor');
-    };
-  }, [currentTool]);
 
   if (loading) {
     return (

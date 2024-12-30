@@ -2,18 +2,35 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
+import useStore from '../store/useStore';
 
-export default function ReportModal({ isOpen, onClose, content }) {
+export default function ReportModal() {
+  const { showReport, setShowReport, selectedNews } = useStore();
+
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(content);
+      await navigator.clipboard.writeText(generateReportContent());
       alert('已复制到剪贴板');
     } catch (err) {
       console.error('复制失败:', err);
     }
   };
 
-  if (!isOpen) return null;
+  const generateReportContent = () => {
+    const today = new Date().toLocaleDateString('zh-CN');
+    let content = `# 新闻摘要报告\n\n生成日期：${today}\n\n`;
+    
+    selectedNews.forEach((news, index) => {
+      content += `## ${index + 1}. ${news.title}\n\n`;
+      if (news.date) content += `日期：${news.date}\n\n`;
+      if (news.ai_description) content += `${news.ai_description}\n\n`;
+      content += `原文链接：${news.link}\n\n`;
+    });
+    
+    return content;
+  };
+
+  if (!showReport) return null;
 
   return (
     <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4">
@@ -28,7 +45,7 @@ export default function ReportModal({ isOpen, onClose, content }) {
               复制内容
             </button>
             <button
-              onClick={onClose}
+              onClick={() => setShowReport(false)}
               className="text-gray-500 hover:text-gray-700"
             >
               <i className="ri-close-line text-2xl"></i>
@@ -45,7 +62,7 @@ export default function ReportModal({ isOpen, onClose, content }) {
                 h3: ({node, ...props}) => <h3 className="mb-4 text-[16px] font-semibold" {...props} />,
               }}
             >
-              {content}
+              {generateReportContent()}
             </ReactMarkdown>
           </div>
         </div>
