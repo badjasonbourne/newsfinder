@@ -20,7 +20,7 @@ export default function ArticleModal({ isOpen, onClose, article }) {
 
   return (
     <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
+      <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
         <div className="sticky top-0 bg-white px-12 py-5 border-b">
           <div className="flex justify-between items-start">
             <h2 className="text-2xl font-bold">{article.title}</h2>
