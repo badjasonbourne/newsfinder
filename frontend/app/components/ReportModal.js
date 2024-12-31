@@ -29,12 +29,10 @@ export default function ReportModal() {
   };
 
   const generateReportContent = () => {
-    const today = new Date().toLocaleDateString('zh-CN');
-    let content = `# 新闻摘要报告\n\n生成日期：${today}\n\n`;
+    let content = '';
     
     selectedNews.forEach((news, index) => {
       content += `## ${index + 1}. ${news.title}\n\n`;
-      if (news.date) content += `日期：${news.date}\n\n`;
       if (news.ai_description) content += `${news.ai_description}\n\n`;
       content += `原文链接：${news.link}\n\n`;
     });
