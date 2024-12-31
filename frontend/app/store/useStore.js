@@ -13,6 +13,16 @@ const useStore = create((set) => ({
   setActiveTag: (activeTag) => set({ activeTag }),
   setTags: (tags) => set({ tags }),
 
+  // Onboarding state
+  showOnboarding: false,
+  setShowOnboarding: (showOnboarding) => set({ showOnboarding }),
+  checkFirstVisit: () => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      set({ showOnboarding: true });
+    }
+  },
+
   // Tool selector state
   currentTool: 'default',
   toolSelectorOpen: false,
@@ -32,6 +42,14 @@ const useStore = create((set) => ({
   setLastSelectedNews: (lastSelectedNews) => set({ lastSelectedNews }),
   setIsSelecting: (isSelecting) => set({ isSelecting }),
   setShowReport: (showReport) => set({ showReport }),
+
+  // Reset tool action
+  resetTool: () => set((state) => ({
+    currentTool: 'default',
+    isSelecting: false,
+    lastSelectedNews: state.selectedNews,
+    selectedNews: [],
+  })),
 
   // Actions
   handleToolSelect: (tool) => set((state) => {

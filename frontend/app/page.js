@@ -6,6 +6,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import NewsCard from './components/NewsCard';
 import ReportModal from './components/ReportModal';
 import ToolSelector from './components/ToolSelector';
+import OnboardingModal from './components/OnboardingModal';
 import useStore from './store/useStore';
 
 export default function Home() {
@@ -30,11 +31,32 @@ export default function Home() {
     setToolSelectorPosition,
     setHoveredTool,
     setShowReport,
+    resetTool,
+    checkFirstVisit,
   } = useStore();
 
   const sliderRef = useRef(null);
   const tagsContainerRef = useRef(null);
   const [hoverTag, setHoverTag] = useState(null);
+
+  // 检查是否为首次访问
+  useEffect(() => {
+    checkFirstVisit();
+  }, [checkFirstVisit]);
+
+  // 处理 Esc 键
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        resetTool();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [resetTool]);
 
   // 初始化滑块位置
   useEffect(() => {
@@ -240,6 +262,8 @@ export default function Home() {
         onClose={() => setShowReport(false)}
         content={generateReportContent()}
       />
+
+      <OnboardingModal />
     </main>
   );
 }
