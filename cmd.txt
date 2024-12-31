@@ -1,4 +1,4 @@
-uvicorn backend.app.main:app --reload
+uvicorn backend.app.main:app --reload --host localhost
 python -m backend.app.service.crawler.update_articles
 
 
