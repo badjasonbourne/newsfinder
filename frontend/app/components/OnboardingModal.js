@@ -22,10 +22,10 @@ export default function OnboardingModal() {
     <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="px-8 py-6">
-          <h2 className="text-2xl font-bold mb-4">欢迎使用新闻助手</h2>
+          <h2 className="text-xl mb-2 text-[16px]">欢迎使用Readix</h2>
           
           <div className="space-y-4">
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-[16px]">
               这是一个强大的新闻阅读和整理工具。以下是一些基本操作：
             </p>
             
