@@ -49,27 +49,19 @@ export default function ReportModal() {
   return (
     <div className="fixed inset-0 backdrop-blur-md bg-[#212A2C]/10 z-50 flex items-center justify-center p-4 default-cursor">
       <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
-        <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center z-10">
-          <h2 className="text-xl font-semibold">新闻报告预览</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={copyToClipboard}
-              className="px-4 py-2 bg-[#134648] text-white rounded-md hover:bg-[#0d3234] transition-colors"
-            >
-              复制内容
-            </button>
-            <button
-              onClick={() => setShowReport(false)}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <i className="ri-close-line text-2xl"></i>
-            </button>
-          </div>
+        <div className="sticky top-0 bg-white px-6 py-3 border-b flex justify-between items-center z-10">
+          <h2 className="text-xl font-semibold">报告预览</h2>
+          <button
+            onClick={() => setShowReport(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <i className="ri-close-line text-2xl"></i>
+          </button>
         </div>
-        <div className="px-8 py-6">
+        <div className="w-[85%] mx-auto py-6">
           <div className="prose max-w-none">
             {selectedNews.map((news, index) => (
-              <div key={news.id} className="relative group mb-8">
+              <div key={news.id} className={`relative group border-gray-300/50 border-t-[0.5px] border-l-[0.5px] border-r-[0.5px] py-5 px-5 ${index === selectedNews.length - 1 ? 'border-b-[0.5px]' : ''}`}>
                 <div className="flex items-center gap-2 mb-4">
                   <h2 className="text-[18px] font-semibold">{`${index + 1}. ${news.title}`}</h2>
                   <button
@@ -82,9 +74,17 @@ export default function ReportModal() {
                 {news.ai_description && (
                   <p className="mb-4 text-[14px]">{news.ai_description}</p>
                 )}
-                <p className="mb-4 text-[14px]">原文链接：{news.link}</p>
+                <p className="text-[14px]">链接：{news.link}</p>
               </div>
             ))}
+          </div>
+          <div className="bg-white py-3 flex justify-end">
+            <button
+              onClick={copyToClipboard}
+              className="px-4 py-2 bg-[#134648] rounded-md text-white text-[13px] hover:bg-[#0d3234] transition-colors"
+            >
+              复制内容
+            </button>
           </div>
         </div>
       </div>
