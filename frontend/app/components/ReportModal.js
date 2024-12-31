@@ -70,13 +70,15 @@ export default function ReportModal() {
           <div className="prose max-w-none">
             {selectedNews.map((news, index) => (
               <div key={news.id} className="relative group mb-8">
-                <button
-                  onClick={() => handleUnselectNews(news.id)}
-                  className="absolute -left-6 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
-                >
-                  <i className="ri-close-circle-line"></i>
-                </button>
-                <h2 className="mb-4 text-[18px] font-semibold">{`${index + 1}. ${news.title}`}</h2>
+                <div className="flex items-center gap-2 mb-4">
+                  <h2 className="text-[18px] font-semibold">{`${index + 1}. ${news.title}`}</h2>
+                  <button
+                    onClick={() => handleUnselectNews(news.id)}
+                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all"
+                  >
+                    <i className="ri-delete-bin-fill"></i>
+                  </button>
+                </div>
                 {news.ai_description && (
                   <p className="mb-4 text-[14px]">{news.ai_description}</p>
                 )}
