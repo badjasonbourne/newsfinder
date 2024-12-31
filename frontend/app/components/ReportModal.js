@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
@@ -6,6 +6,7 @@ import useStore from '../store/useStore';
 
 export default function ReportModal() {
   const { showReport, setShowReport, selectedNews, setSelectedNews } = useStore();
+  const [showCopySuccess, setShowCopySuccess] = useState(false);
 
   useEffect(() => {
     if (showReport) {
@@ -22,7 +23,12 @@ export default function ReportModal() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generateReportContent());
-      alert('已复制到剪贴板');
+      setShowCopySuccess(true);
+      
+      setTimeout(() => {
+        setShowCopySuccess(false);
+      }, 600); // 300ms (fade in) + 300ms (fade out)
+      
     } catch (err) {
       console.error('复制失败:', err);
     }
@@ -81,9 +87,12 @@ export default function ReportModal() {
           <div className="bg-white py-3 flex justify-end">
             <button
               onClick={copyToClipboard}
-              className="px-4 py-2 bg-[#134648] rounded-md text-white text-[13px] hover:bg-[#0d3234] transition-colors"
+              className="w-[96px] h-[32px] bg-[#134648] rounded-md text-white text-[13px] hover:bg-[#0d3234] transition-colors text-center relative"
             >
-              复制内容
+              <span className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${showCopySuccess ? 'opacity-0' : 'opacity-100'}`}>
+                复制为报告
+              </span>
+              <i className={`ri-checkbox-circle-line text-[16px] absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${showCopySuccess ? 'opacity-100' : 'opacity-0'}`} />
             </button>
           </div>
         </div>
