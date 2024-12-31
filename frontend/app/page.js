@@ -227,7 +227,7 @@ export default function Home() {
           <div className="fixed bottom-8 right-8 z-50">
             <button
               onClick={() => setShowReport(true)}
-              className="px-6 py-3 bg-[#134648] text-white rounded-full shadow-lg hover:bg-[#0d3234] transition-colors flex items-center gap-2"
+              className="px-4 py-3 text-[14px] bg-[#134648] text-white rounded-[8px] shadow-lg hover:bg-[#0d3234] transition-colors flex items-center gap-2"
             >
               <i className="ri-file-text-line"></i>
               预览报告 ({selectedNews.length})

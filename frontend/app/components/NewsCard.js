@@ -11,9 +11,9 @@ export default function NewsCard({ item }) {
   return (
     <>
       <article 
-        className={`rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-200 relative group 
+        className={`rounded-[2px] text-[14px] overflow-hidden border-[0.5px] border-gray-200 relative group transition-colors duration-200
           ${isSelecting ? 'cursor-crosshair' : ''} 
-          ${selected ? 'ring-2 ring-[#134648]' : ''}`}
+          ${selected ? 'bg-[#1C6669]/10' : ''}`}
         onClick={() => isSelecting && handleNewsSelect(item)}
       >
         {item.tag && (
