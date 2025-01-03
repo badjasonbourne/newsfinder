@@ -92,7 +92,7 @@ const useStore = create((set) => ({
     set({ loading: true });
     try {
       const [data] = await Promise.all([
-        fetch('http://localhost:8000/api/news').then(response => {
+        fetch('/api/news').then(response => {
           if (!response.ok) {
             throw new Error('Failed to fetch news');
           }
